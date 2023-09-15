@@ -17,14 +17,11 @@
 package com.lulu.favorite.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -89,31 +86,13 @@ private fun ReplyNavHost(
         }
 
         composable(ReplyRoute.ARTICLES) {
-            EmptyComingSoon(text = "")
+            AllFilesPage()
         }
         composable(ReplyRoute.DM) {
-            Demo3()
+            DownLoadPage()
         }
         composable(ReplyRoute.GROUPS) {
-            Demo4()
-        }
-    }
-}
-
-@Composable
-fun Demo3() {
-    Box {
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "3")
-        }
-    }
-}
-
-@Composable
-fun Demo4() {
-    Box {
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "4")
+            EmptyComingSoon(text = "")
         }
     }
 }
