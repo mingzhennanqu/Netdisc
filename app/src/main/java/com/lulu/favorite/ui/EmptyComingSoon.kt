@@ -37,7 +37,6 @@ import com.lulu.favorite.R
  * */
 @Composable
 fun EmptyComingSoon(
-    text : String,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -59,12 +58,11 @@ fun EmptyComingSoon(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.outline
         )
-        Text(text = text)
     }
 }
 
 @Preview
 @Composable
 fun ComingSoonPreview() {
-    EmptyComingSoon(text = "")
+    EmptyComingSoon()
 }

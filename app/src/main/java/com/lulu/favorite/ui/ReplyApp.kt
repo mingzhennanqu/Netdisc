@@ -92,7 +92,7 @@ private fun ReplyNavHost(
             DownLoadPage()
         }
         composable(ReplyRoute.GROUPS) {
-            EmptyComingSoon(text = "")
+            EmptyComingSoon()
         }
     }
 }
