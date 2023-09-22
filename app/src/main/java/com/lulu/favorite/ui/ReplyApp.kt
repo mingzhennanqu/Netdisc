@@ -86,7 +86,8 @@ private fun ReplyNavHost(
         }
 
         composable(ReplyRoute.ARTICLES) {
-            AllFilesPage()
+            AllFilesPage(folders = findHomeFolder())
+
         }
         composable(ReplyRoute.DM) {
             DownLoadPage()

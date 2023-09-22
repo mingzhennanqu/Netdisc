@@ -119,6 +119,10 @@ dependencies {
 //    implementation(libs.okhttp)
     implementation(libs.okhttp3)
 
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    implementation("com.google.code.gson:gson:2.8.9")
+
+
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

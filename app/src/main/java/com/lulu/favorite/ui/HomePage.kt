@@ -6,9 +6,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -37,34 +35,26 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 
-
 @Preview
 @Composable
 fun HomePage(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
 //    navController : NavController
 ) {
     //初始化文本变量
     var text by remember { mutableStateOf("") }
 
-    val widthPhone = (getApplicationScreenWidth(context = LocalContext.current)/3).dp
+    val widthPhone = (getApplicationScreenWidth(context = LocalContext.current) / 3).dp
 
     Row(
         modifier = Modifier.width(getApplicationScreenWidth(context = LocalContext.current).dp),
         verticalAlignment = Alignment.CenterVertically,//垂直居中
         horizontalArrangement = Arrangement.Center //水平居中
     ) {
-//        TextField(value = text,
-//            onValueChange = {text = it} ,
-//            shape = RoundedCornerShape(50.dp) ,
-//            colors = TextFieldDefaults.textFieldColors(
-//
-//            )
-//        )
         OutlinedTextField(
             modifier = Modifier.width(widthPhone),
             value = text,
-            onValueChange = {  text = it },//监听文本变化
+            onValueChange = { text = it },//监听文本变化
             label = { Text(text = stringResource(id = R.string.Enter)) },
             singleLine = true,
             trailingIcon = @Composable {//输入框末尾图标
@@ -73,8 +63,9 @@ fun HomePage(
                         contentDescription = "",
                         modifier = Modifier.clickable { text = "" }
                     )
-                }else{
-                    Image(imageVector = Icons.Filled.Search,
+                } else {
+                    Image(
+                        imageVector = Icons.Filled.Search,
                         contentDescription = ""
                     )
                 }
@@ -82,7 +73,7 @@ fun HomePage(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),//自定义回车为搜索操作
             keyboardActions = KeyboardActions(//将搜索事件自定义
                 onSearch = {
-                     val textEnter = textEnter(text)
+                    val textEnter = textEnter(text)
                     Log.d("TAG", "HomePage: $textEnter")
 //                    navController.navigate("Articles")
                 }
@@ -93,21 +84,11 @@ fun HomePage(
 
 }
 
-@Composable
-fun demoFun() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-
-    }
-}
-
 
 /**
  * 键盘回车事件
  * */
-fun textEnter(text : String) : String {
-    var s : String = ""
+fun textEnter(text: String) {
     Log.d("TAG", "textEnter:  $text ")
 //    val callback = object : Callback {
 //        override fun onFailure(call: Call, e: IOException) {
@@ -121,34 +102,26 @@ fun textEnter(text : String) : String {
 //    }
 //    Cl("http://192.168.2.157:8080/maven_app/selectAllFiles", "json", callback)
 
-    Cline("${Constants.Url}selectAllFiles", "json", object : Callback{
+    Cline("${Constants.Url}selectAllHomeFiles", "json", object : Callback {
 
         override fun onFailure(call: Call, e: IOException) {
             Log.d("TAG", "onFailure: $e")
         }
 
         override fun onResponse(call: Call, response: Response) {
-            s = response.body?.string().toString()
+            val s = response.body?.string().toString()
             Log.d("TAG", "onResponse:  $s")
         }
     })
-    return s
 
 }
 
-
-/**
- * 上移动画
- * */
-fun moveOutlinedTextField(){
-
-}
 
 /**
  * 获取应用的屏幕参数DisplayMetrics
  * DisplayMetrics还可以获取一些物理像素、比例之类的数据
  */
-private fun getDisplayMetrics(context: Context): DisplayMetrics {
+fun getDisplayMetrics(context: Context): DisplayMetrics {
     return context.resources.displayMetrics
 }
 
@@ -159,4 +132,7 @@ private fun getDisplayMetrics(context: Context): DisplayMetrics {
 fun getApplicationScreenWidth(context: Context): Int {
     return getDisplayMetrics(context).widthPixels
 }
+
+
+
 
