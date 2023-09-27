@@ -7,7 +7,7 @@ data class HomePageFile(
     var address: String
 )
 
-data class HomePageFile1(
+data class HomePageFileAll(
     var  code : String,
 
     var  msg : String,

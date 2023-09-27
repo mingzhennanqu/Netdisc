@@ -24,7 +24,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -74,6 +76,8 @@ private fun ReplyNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
+    var folders by remember { mutableStateOf(findHomeFolder()) }
+
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -86,17 +90,21 @@ private fun ReplyNavHost(
         }
 
         composable(ReplyRoute.ARTICLES) {
-            AllFilesPage(folders = findHomeFolder())
-
+            AllFilesPageFirst(
+                folders = folders,
+                controller = navController
+            )
         }
         composable(ReplyRoute.DM) {
             DownLoadPage()
         }
         composable(ReplyRoute.GROUPS) {
-            EmptyComingSoon()
+//            EmptyComingSoon()
+            RequestWithProgress("hello")
         }
     }
 }
+
 
 
 

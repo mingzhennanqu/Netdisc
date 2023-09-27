@@ -120,7 +120,11 @@ dependencies {
     implementation(libs.okhttp3)
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation(libs.gson)
+
+    implementation(libs.accompanist.swiperefresh)
+
+    implementation(libs.androidx.compose.material)
 
 
     androidTestImplementation(libs.junit)

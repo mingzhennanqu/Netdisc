@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lulu.favorite.R
 import com.lulu.favorite.ui.utils.Constants
-import com.lulu.favorite.ui.utils.okhttp.Cline
+import com.lulu.favorite.ui.utils.okhttp.cline
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
@@ -102,7 +102,7 @@ fun textEnter(text: String) {
 //    }
 //    Cl("http://192.168.2.157:8080/maven_app/selectAllFiles", "json", callback)
 
-    Cline("${Constants.Url}selectAllHomeFiles", "json", object : Callback {
+    cline("${Constants.Url}selectAllHomeFiles", "json", object : Callback {
 
         override fun onFailure(call: Call, e: IOException) {
             Log.d("TAG", "onFailure: $e")
