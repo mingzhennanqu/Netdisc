@@ -9,7 +9,6 @@ data class HomePageFile(
 
 data class HomePageFileAll(
     var  code : String,
-
     var  msg : String,
     var  success: Boolean,
     var  header :String,
