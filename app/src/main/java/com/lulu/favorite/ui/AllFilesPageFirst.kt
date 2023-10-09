@@ -3,6 +3,7 @@ package com.lulu.favorite.ui
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,13 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,14 +70,21 @@ fun AllFilesPageFirst(
     //用于展示tag层级的list
     val remHomeTagList = remember { mutableListOf("Home") }
 
+    //用于二次返回退出App的state
     var showExitHint by remember { mutableStateOf(false) }
 
+    //协程作用域
     var scope = rememberCoroutineScope()
 
-    var snackbarHostState = remember { SnackbarHostState() }
-
+    //Scaffold的state
     val scaffoldState = rememberScaffoldState()
-//    val scope = rememberCoroutineScope()
+
+    //视频Url
+    val remVideoUrl = remember { mutableStateOf(String()) }
+
+    //用于ui展示的state
+    val visible = remember { mutableStateOf(false) }
+
 
 
     //挂起函数,用于监听state，刷新UI
@@ -84,111 +92,54 @@ fun AllFilesPageFirst(
         // 在这里执行手动刷新的操作
         refreshTrigger.value = !refreshTrigger.value
     }
+
     Scaffold(
         scaffoldState = scaffoldState,
         backgroundColor = Color.Transparent
-    ){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp)
-//            .clickable {
-//                controller.popBackStack()
-//            }
     ) {
-        Row() {
-            remHomeTagList.forEach {
-                Box(
-//                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.tag),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .width(40.dp)
-//                            .clickable {
-//                                Log.d("TAG", "AllFilesPageFirst: $it")
-//                                remHomeTagList.subList(0 , 2)
-//                                rememberedFolders.value = findFilesForNameByType(it)
-////                                remHomeTagList.subList(0 , remHomeTagList.indexOf(it))
-//                            }
-                    )
-                    Text(text = it, fontSize = 5.sp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
+            topTag(remHomeTagList = remHomeTagList)
 
-                }
+            rememberedFolders.value?.forEach { file ->
+                allFilesShow(
+                    file = file,
+                    remHomeTagList = remHomeTagList,
+                    rememberedFolders = rememberedFolders,
+                    refreshTrigger = refreshTrigger,
+                    remVideoUrl = remVideoUrl,
+                    visible = visible
+                )
 
-            }
-        }
-
-        rememberedFolders.value?.forEach { file ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        when (file.file_type) {
-                            "folders" -> {
-                                rememberedFolders.value = findFilesForNameByType(file.name)
-                                remHomeTagList.add(file.name)
-                                Log.d("TAG", "AllFilesPageFirst: $remHomeTagList")
-                            }
-
-                            "txt" ->
-                                Log.d("TAG", "AllFilesPageFirst: 这是${file.name}")
-                        }
-
-                        suspend {
-                            delay(500)
-                            refreshTrigger.value = !refreshTrigger.value
-                        }
-
-                    },
-
-//                horizontalArrangement = Arrangement.Center,//垂直居中
-                verticalAlignment = Alignment.CenterVertically,//水平居中
-            ) {
-                when (file.file_type) {
-                    "folders" ->
-                        Image(
-                            painter = painterResource(id = R.drawable.folder),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(40.dp)
-                                .padding(10.dp),
-                        )
-
-                    "txt" ->
-                        Image(
-                            painter = painterResource(id = R.drawable.txt),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .width(40.dp)
-                                .padding(10.dp),
-                        )
-                }
-                Text(
-                    text = file.name,
-                    fontSize = 10.sp,
-                    textAlign = TextAlign.Center
+                Divider(
+                    //设置分割线的高度
+                    thickness = 0.5.dp,
+                    //设置分割线的颜色
+                    color = Color.Red,
                 )
             }
-            Divider(
-                //设置分割线的高度
-                thickness = 0.5.dp,
-                //设置分割线的颜色
-                color = Color.Red,
-            )
-
         }
-
-
-        }
-
-
-
     }
+
+    AnimatedVisibility(visible = visible.value) {
+        Box(
+        ) {
+            Log.d("TAG", "Constants.UrlTom + remVideoUrl.value: ${Constants.UrlTom + remVideoUrl.value}")
+            videoP(url = remVideoUrl)
+        }
+    }
+
+
+
     //系统导航返回键
     BackHandler(enabled = true) {
+        if (visible.value){
+            visible.value = !visible.value
+            return@BackHandler
+        }
         Log.e("tag", "返回键被点击 $remHomeTagList")
         if (remHomeTagList.last() == "Home") {
             Log.d("TAG", "AllFilesPageFirst: it is last item")
@@ -223,14 +174,127 @@ fun AllFilesPageFirst(
 
 }
 
+/**
+ * 所有文件展示
+ * */
+@Composable
+fun allFilesShow(
+    file: HomePageFile,
+    remHomeTagList: MutableList<String>,
+    rememberedFolders: MutableState<List<HomePageFile>?>,
+    refreshTrigger: MutableState<Boolean>,
+    remVideoUrl : MutableState<String>,
+    visible : MutableState<Boolean>
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                when (file.file_type) {
+                    "folders" -> {
+                        rememberedFolders.value = findFilesForNameByType(file.name)
+                        remHomeTagList.add(file.name)
+                        Log.d("TAG", "AllFilesPageFirst: $remHomeTagList")
+                    }
+
+                    "txt" -> {
+                        Log.d("TAG", "AllFilesPageFirst: 这是${file.name}")
+                    }
+
+                    "mp4" -> {
+                        Log.d("TAG", "AllFilesPageFirst: 这是${file.file_address}")
+                        remVideoUrl.value = file.file_address
+                        visible.value = !visible.value
+                    }
+                }
+
+                suspend {
+                    delay(500)
+                    refreshTrigger.value = !refreshTrigger.value
+                }
+
+            },
+
+//                horizontalArrangement = Arrangement.Center,//垂直居中
+        verticalAlignment = Alignment.CenterVertically,//水平居中
+    ) {
+        when (file.file_type) {
+            "folders" ->
+                Image(
+                    painter = painterResource(id = R.drawable.folder),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+                        .padding(10.dp),
+                )
+
+            "txt" ->
+                Image(
+                    painter = painterResource(id = R.drawable.txt),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+                        .padding(10.dp),
+                )
+
+            "mp4" ->
+                Image(
+                    painter = painterResource(id = R.drawable.video),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+                        .padding(10.dp),
+                )
+        }
+        Text(
+            text = file.name,
+            fontSize = 10.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+/**
+ * 所有文件展示的tag层级
+ * */
+@Composable
+fun topTag(
+    remHomeTagList: MutableList<String>
+) {
+    Row() {
+        remHomeTagList.forEach {
+            Box(
+//                    modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.tag),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+//                            .clickable {
+//                                Log.d("TAG", "AllFilesPageFirst: $it")
+//                                remHomeTagList.subList(0 , 2)
+//                                rememberedFolders.value = findFilesForNameByType(it)
+////                                remHomeTagList.subList(0 , remHomeTagList.indexOf(it))
+//                            }
+                )
+                Text(text = it, fontSize = 5.sp)
+
+            }
+
+        }
+    }
+}
 
 
-val gson = Gson()
+
 
 /**
  * 根据传入参数查询
  * */
 fun findFilesForNameByType(name: String): List<HomePageFile> {
+    val gson = Gson()
     val list = mutableListOf<HomePageFile>()
 
     clineParameter("${Constants.Url}selectFliesForName", name, object : Callback {

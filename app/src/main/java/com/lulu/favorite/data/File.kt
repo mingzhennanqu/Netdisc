@@ -4,7 +4,8 @@ data class HomePageFile(
     var id: Int,
     var name: String,
     var file_type: String,
-    var address: String
+    var parent: String,
+    var file_address: String,
 )
 
 data class HomePageFileAll(

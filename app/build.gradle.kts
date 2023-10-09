@@ -126,6 +126,14 @@ dependencies {
 
     implementation(libs.androidx.compose.material)
 
+    implementation(libs.compose.video)
+    implementation(libs.androidx.media3.exoplayer) // [Required] androidx.media3 ExoPlayer dependency
+    implementation(libs.androidx.media3.session) // [Required] MediaSession Extension dependency
+    implementation(libs.androidx.media3.ui) // [Required] Base Player UI
+
+    implementation(libs.androidx.media3.exoplayer.dash) // [Optional] If your media item is DASH
+    implementation(libs.androidx.media3.exoplayer.hls) // [Optional] If your media item is HLS (m3u8..)
+
 
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)

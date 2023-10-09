@@ -35,6 +35,8 @@ class MainActivity : ComponentActivity() {
                 ReplyApp()
             }
         }
+        //默认情况下，使用 LRU 缓存。若要为常用视频播放器设置缓存，请在应用启动时仅调用以下方法一次。
+//        VideoPlayerCacheManager.initialize(this, 1024 * 1024 * 1024)    // 1GB
     }
 }
 
