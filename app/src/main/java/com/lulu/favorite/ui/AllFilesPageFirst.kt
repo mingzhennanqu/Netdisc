@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,9 @@ import com.lulu.favorite.data.HomePageFile
 import com.lulu.favorite.data.HomePageFileAll
 import com.lulu.favorite.ui.utils.Constants
 import com.lulu.favorite.ui.utils.okhttp.clineParameter
+import com.rizzi.bouquet.ResourceType
+import com.rizzi.bouquet.VerticalPDFReader
+import com.rizzi.bouquet.VerticalPdfReaderState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.Call
@@ -82,8 +86,18 @@ fun AllFilesPageFirst(
     //视频Url
     val remVideoUrl = remember { mutableStateOf(String()) }
 
-    //用于ui展示的state
-    val visible = remember { mutableStateOf(false) }
+    //用于视频展示的state
+    val movieVisible = remember { mutableStateOf(false) }
+
+    //用于文本展示的state
+    val pdfVisible = remember { mutableStateOf(false) }
+
+//    val pdfState = rememberVerticalPdfReaderState(
+//        resource = ResourceType.Remote(String()),
+//        isZoomEnable = true
+//    )
+
+    val pdfState = remember { mutableStateOf(VerticalPdfReaderState(ResourceType.Remote(String()), isZoomEnable = true)) }
 
 
 
@@ -111,7 +125,9 @@ fun AllFilesPageFirst(
                     rememberedFolders = rememberedFolders,
                     refreshTrigger = refreshTrigger,
                     remVideoUrl = remVideoUrl,
-                    visible = visible
+                    movieVisible = movieVisible,
+                    pdfState = pdfState,
+                    pdfVisible = pdfVisible
                 )
 
                 Divider(
@@ -124,11 +140,22 @@ fun AllFilesPageFirst(
         }
     }
 
-    AnimatedVisibility(visible = visible.value) {
+    AnimatedVisibility(visible = movieVisible.value) {
         Box(
         ) {
             Log.d("TAG", "Constants.UrlTom + remVideoUrl.value: ${Constants.UrlTom + remVideoUrl.value}")
             videoP(url = remVideoUrl)
+        }
+    }
+    AnimatedVisibility(visible = pdfVisible.value) {
+        Box(
+        ) {
+            VerticalPDFReader(
+                state = pdfState.value,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Gray)
+            )
         }
     }
 
@@ -136,8 +163,12 @@ fun AllFilesPageFirst(
 
     //系统导航返回键
     BackHandler(enabled = true) {
-        if (visible.value){
-            visible.value = !visible.value
+        if (movieVisible.value){
+            movieVisible.value = !movieVisible.value
+            return@BackHandler
+        }
+        if (pdfVisible.value){
+            pdfVisible.value = !pdfVisible.value
             return@BackHandler
         }
         Log.e("tag", "返回键被点击 $remHomeTagList")
@@ -184,7 +215,9 @@ fun allFilesShow(
     rememberedFolders: MutableState<List<HomePageFile>?>,
     refreshTrigger: MutableState<Boolean>,
     remVideoUrl : MutableState<String>,
-    visible : MutableState<Boolean>
+    movieVisible : MutableState<Boolean>,
+    pdfState : MutableState<VerticalPdfReaderState>,
+    pdfVisible : MutableState<Boolean>,
 ) {
     Row(
         modifier = Modifier
@@ -204,7 +237,13 @@ fun allFilesShow(
                     "mp4" -> {
                         Log.d("TAG", "AllFilesPageFirst: 这是${file.file_address}")
                         remVideoUrl.value = file.file_address
-                        visible.value = !visible.value
+                        movieVisible.value = !movieVisible.value
+                    }
+                    "pdf" -> {
+                        Log.d("TAG", "AllFilesPageFirst: 这是${file.name}")
+                        Log.d("TAG", "Constants.UrlTom + file.file_address: 这是${Constants.UrlTom + file.file_address}")
+                        pdfState.value = VerticalPdfReaderState(ResourceType.Remote(Constants.UrlTom + file.file_address), isZoomEnable = true)
+                        pdfVisible.value = !pdfVisible.value
                     }
                 }
 
@@ -240,6 +279,15 @@ fun allFilesShow(
             "mp4" ->
                 Image(
                     painter = painterResource(id = R.drawable.video),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(40.dp)
+                        .padding(10.dp),
+                )
+
+            "pdf" ->
+                Image(
+                    painter = painterResource(id = R.drawable.pdf),
                     contentDescription = null,
                     modifier = Modifier
                         .width(40.dp)

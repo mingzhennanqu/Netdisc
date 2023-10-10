@@ -35,7 +35,7 @@ fun videoP(
 //            VideoPlayerMediaItem.StorageMediaItem(
 //                storageUri = Uri.parse("")
 //            ),
-            //表示从网络中加载视频。可以指定视频的URL地址来加载网络视频
+            //从网络中加载视频。可以指定视频的URL地址来加载网络视频
             VideoPlayerMediaItem.NetworkMediaItem(
 //                url = "http://192.168.2.157:8080/mysql/%E5%BD%B1%E8%A7%86/%E9%87%9C%E5%B1%B1%E8%A1%8C/%E9%87%9C%E5%B1%B1%E8%A1%8C.mp4",
                 url = Constants.UrlTom + url.value,
@@ -50,7 +50,7 @@ fun videoP(
             )
         ),
         //控制是否自动处理生命周期。当设置为true时，组件会自动根据界面的生命周期状态来管理视频播放的开始、暂停、停止等操作。
-        handleLifecycle = false,
+        handleLifecycle = true,
 
         //指定视频是否自动开始播放
         autoPlay = false,
