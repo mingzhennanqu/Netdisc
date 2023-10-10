@@ -133,7 +133,7 @@ dependencies {
 
     implementation(libs.androidx.media3.exoplayer.dash) // [Optional] If your media item is DASH
     implementation(libs.androidx.media3.exoplayer.hls) // [Optional] If your media item is HLS (m3u8..)
-    implementation("io.github.grizzi91:bouquet:1.1.2")
+    implementation(libs.bouquet)
 
 
     androidTestImplementation(libs.junit)

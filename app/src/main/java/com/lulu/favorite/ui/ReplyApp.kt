@@ -83,7 +83,8 @@ private fun ReplyNavHost(
         startDestination = ReplyRoute.INBOX,
     ) {
         composable(ReplyRoute.INBOX) {
-            HomePage(modifier = Modifier ,
+            HomePage(
+                modifier = Modifier,
 //                navController = navController,
             )
         }
@@ -95,11 +96,10 @@ private fun ReplyNavHost(
             )
         }
         composable(ReplyRoute.DM) {
-            DownLoadPage()
+            DownLoadPage("hello")
         }
         composable(ReplyRoute.GROUPS) {
-//            EmptyComingSoon()
-            RequestWithProgress("hello")
+            My()
         }
     }
 }

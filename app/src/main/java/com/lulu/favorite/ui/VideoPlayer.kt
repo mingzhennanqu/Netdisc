@@ -10,7 +10,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.MimeTypes
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import com.lulu.favorite.ui.utils.Constants
+import com.lulu.favorite.utils.Constants
 import io.sanghun.compose.video.RepeatMode
 import io.sanghun.compose.video.VideoPlayer
 import io.sanghun.compose.video.controller.VideoPlayerControllerConfig

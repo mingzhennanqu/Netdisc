@@ -41,8 +41,8 @@ import com.lulu.favorite.MainActivity
 import com.lulu.favorite.R
 import com.lulu.favorite.data.HomePageFile
 import com.lulu.favorite.data.HomePageFileAll
-import com.lulu.favorite.ui.utils.Constants
-import com.lulu.favorite.ui.utils.okhttp.clineParameter
+import com.lulu.favorite.utils.Constants
+import com.lulu.favorite.utils.okhttp.clineParameter
 import com.rizzi.bouquet.ResourceType
 import com.rizzi.bouquet.VerticalPDFReader
 import com.rizzi.bouquet.VerticalPdfReaderState

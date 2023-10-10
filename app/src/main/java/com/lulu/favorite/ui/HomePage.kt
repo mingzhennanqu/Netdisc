@@ -28,8 +28,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lulu.favorite.R
-import com.lulu.favorite.ui.utils.Constants
-import com.lulu.favorite.ui.utils.okhttp.cline
+import com.lulu.favorite.utils.Constants
+import com.lulu.favorite.utils.okhttp.cline
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response

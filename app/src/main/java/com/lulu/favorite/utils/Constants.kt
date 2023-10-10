@@ -1,4 +1,4 @@
-package com.lulu.favorite.ui.utils
+package com.lulu.favorite.utils
 
 class Constants {
 

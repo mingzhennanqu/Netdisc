@@ -1,4 +1,4 @@
-package com.lulu.favorite.ui.utils.okhttp
+package com.lulu.favorite.utils.okhttp
 
 import okhttp3.Callback
 import okhttp3.FormBody
