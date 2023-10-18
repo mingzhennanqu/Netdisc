@@ -19,9 +19,9 @@ package com.lulu.favorite.ui.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Inbox
-import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -78,14 +78,14 @@ val TOP_LEVEL_DESTINATIONS = listOf(
     ),
     ReplyTopLevelDestination(
         route = ReplyRoute.DM,
-        selectedIcon = Icons.Outlined.ChatBubbleOutline,
-        unselectedIcon = Icons.Outlined.ChatBubbleOutline,
+        selectedIcon = Icons.Outlined.Download,
+        unselectedIcon = Icons.Outlined.Download,
         iconTextId = R.string.tab_inbox
     ),
     ReplyTopLevelDestination(
         route = ReplyRoute.GROUPS,
-        selectedIcon = Icons.Default.People,
-        unselectedIcon = Icons.Default.People,
+        selectedIcon = Icons.Default.Person,
+        unselectedIcon = Icons.Default.Person,
         iconTextId = R.string.tab_article
     )
 

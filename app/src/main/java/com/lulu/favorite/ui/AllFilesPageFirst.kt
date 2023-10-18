@@ -78,7 +78,7 @@ fun AllFilesPageFirst(
     var showExitHint by remember { mutableStateOf(false) }
 
     //协程作用域
-    var scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     //Scaffold的state
     val scaffoldState = rememberScaffoldState()
@@ -89,7 +89,7 @@ fun AllFilesPageFirst(
     //用于视频展示的state
     val movieVisible = remember { mutableStateOf(false) }
 
-    //用于文本展示的state
+    //用于pdf展示的state
     val pdfVisible = remember { mutableStateOf(false) }
 
 //    val pdfState = rememberVerticalPdfReaderState(
@@ -97,6 +97,7 @@ fun AllFilesPageFirst(
 //        isZoomEnable = true
 //    )
 
+    //初始化pdf阅读器
     val pdfState = remember { mutableStateOf(VerticalPdfReaderState(ResourceType.Remote(String()), isZoomEnable = true)) }
 
 
@@ -116,10 +117,10 @@ fun AllFilesPageFirst(
                 .fillMaxSize()
                 .padding(15.dp)
         ) {
-            topTag(remHomeTagList = remHomeTagList)
+            TopTag(remHomeTagList = remHomeTagList)
 
             rememberedFolders.value?.forEach { file ->
-                allFilesShow(
+                AllFilesShow(
                     file = file,
                     remHomeTagList = remHomeTagList,
                     rememberedFolders = rememberedFolders,
@@ -209,7 +210,7 @@ fun AllFilesPageFirst(
  * 所有文件展示
  * */
 @Composable
-fun allFilesShow(
+fun AllFilesShow(
     file: HomePageFile,
     remHomeTagList: MutableList<String>,
     rememberedFolders: MutableState<List<HomePageFile>?>,
@@ -239,10 +240,17 @@ fun allFilesShow(
                         remVideoUrl.value = file.file_address
                         movieVisible.value = !movieVisible.value
                     }
+
                     "pdf" -> {
                         Log.d("TAG", "AllFilesPageFirst: 这是${file.name}")
-                        Log.d("TAG", "Constants.UrlTom + file.file_address: 这是${Constants.UrlTom + file.file_address}")
-                        pdfState.value = VerticalPdfReaderState(ResourceType.Remote(Constants.UrlTom + file.file_address), isZoomEnable = true)
+                        Log.d(
+                            "TAG",
+                            "Constants.UrlTom + file.file_address: 这是${Constants.UrlTom + file.file_address}"
+                        )
+                        pdfState.value = VerticalPdfReaderState(
+                            ResourceType.Remote(Constants.UrlTom + file.file_address),
+                            isZoomEnable = true
+                        )
                         pdfVisible.value = !pdfVisible.value
                     }
                 }
@@ -257,43 +265,9 @@ fun allFilesShow(
 //                horizontalArrangement = Arrangement.Center,//垂直居中
         verticalAlignment = Alignment.CenterVertically,//水平居中
     ) {
-        when (file.file_type) {
-            "folders" ->
-                Image(
-                    painter = painterResource(id = R.drawable.folder),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .padding(10.dp),
-                )
 
-            "txt" ->
-                Image(
-                    painter = painterResource(id = R.drawable.txt),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .padding(10.dp),
-                )
+        HomeFileShow(files = file)
 
-            "mp4" ->
-                Image(
-                    painter = painterResource(id = R.drawable.video),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .padding(10.dp),
-                )
-
-            "pdf" ->
-                Image(
-                    painter = painterResource(id = R.drawable.pdf),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .width(40.dp)
-                        .padding(10.dp),
-                )
-        }
         Text(
             text = file.name,
             fontSize = 10.sp,
@@ -306,7 +280,7 @@ fun allFilesShow(
  * 所有文件展示的tag层级
  * */
 @Composable
-fun topTag(
+fun TopTag(
     remHomeTagList: MutableList<String>
 ) {
     Row() {
@@ -335,6 +309,51 @@ fun topTag(
     }
 }
 
+/**
+ * 根据文件类型选择图标
+ * */
+@Composable
+fun HomeFileShow(
+    files: HomePageFile
+) {
+    when (files.file_type) {
+        "folders" ->
+            Image(
+                painter = painterResource(id = R.drawable.folder),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(40.dp)
+                    .padding(10.dp),
+            )
+
+        "txt" ->
+            Image(
+                painter = painterResource(id = R.drawable.txt),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(40.dp)
+                    .padding(10.dp),
+            )
+
+        "mp4" ->
+            Image(
+                painter = painterResource(id = R.drawable.video),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(40.dp)
+                    .padding(10.dp),
+            )
+
+        "pdf" ->
+            Image(
+                painter = painterResource(id = R.drawable.pdf),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(40.dp)
+                    .padding(10.dp),
+            )
+    }
+}
 
 
 
@@ -345,7 +364,7 @@ fun findFilesForNameByType(name: String): List<HomePageFile> {
     val gson = Gson()
     val list = mutableListOf<HomePageFile>()
 
-    clineParameter("${Constants.Url}selectFliesForName", name, object : Callback {
+    clineParameter("${Constants.Url}selectFliesForNameByParameter", name, object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             Log.d("TAG", "onFailure: $e")
         }
